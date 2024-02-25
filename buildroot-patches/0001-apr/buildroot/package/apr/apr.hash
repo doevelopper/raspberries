@@ -1,0 +1,4 @@
+# From https://github.com/apache/apr/archive/2de472bae38fa8c5a10632bb133a9b38b3e7152c.tar.gz
+sha256  7abf548331c0a1809ccf955552c4a829730442a76cd799b8dae2c65bee6ab561  2de472bae38fa8c5a10632bb133a9b38b3e7152c.tar.gz
+# Locally calculated
+sha256  f854aeef66ecd55a126226e82b3f26793fc3b1c584647f6a0edc5639974c38ad  LICENSE

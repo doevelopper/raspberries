@@ -1,0 +1,62 @@
+diff --git a/package/Config.in b/package/Config.in
+index 511e691ed3..84e5efa856 100644
+--- a/package/Config.in
++++ b/package/Config.in
+@@ -2677,6 +2677,7 @@ menu "System tools"
+ 	source "package/quota/Config.in"
+ 	source "package/quotatool/Config.in"
+ 	source "package/rauc/Config.in"
++	source "package/rauc-hawkbit-updater/Config.in"
+ 	source "package/rsyslog/Config.in"
+ 	source "package/runc/Config.in"
+ 	source "package/s390-tools/Config.in"
+diff --git a/package/rauc-hawkbit-updater/Config.in b/package/rauc-hawkbit-updater/Config.in
+new file mode 100644
+index 0000000000..bd7b8d7cf5
+--- /dev/null
++++ b/package/rauc-hawkbit-updater/Config.in
+@@ -0,0 +1,14 @@
++config BR2_PACKAGE_RAUC_HAWKBIT_UPDATER
++    bool "rauc-hawkbit-updater"
++    depends on BR2_PACKAGE_RAUC
++    depends on BR2_PACKAGE_JSON_GLIB
++    help
++      rauc-hawkbit-updater is a link between Pengutronix
++      RAUC and the Eclipse Hawkbit API. Hawkbit can
++      communicate to remote update servers, and use the
++      d-bus interface to trigger updates from RAUC.
++
++      http://rauc.io/
++
++comment "rauc-hawkbit-updater needs rauc and json-glib"
++	depends on !BR2_PACKAGE_RAUC || !BR2_PACKAGE_JSON_GLIB
+diff --git a/package/rauc-hawkbit-updater/rauc-hawkbit-updater.hash b/package/rauc-hawkbit-updater/rauc-hawkbit-updater.hash
+new file mode 100644
+index 0000000000..c65ead3784
+--- /dev/null
++++ b/package/rauc-hawkbit-updater/rauc-hawkbit-updater.hash
+@@ -0,0 +1,3 @@
++# Locally calculated
++sha256  42318e96a464e6c716edb45c48bd3ec3b874462973db902fbe099a395e4acb4b  rauc-hawkbit-updater-1.3.tar.xz
++sha256  041234c81fd6fe6c531ea1a886b9e740b9ee06759d1a910a14edbd06f4aa62c7  LICENSE
+diff --git a/package/rauc-hawkbit-updater/rauc-hawkbit-updater.mk b/package/rauc-hawkbit-updater/rauc-hawkbit-updater.mk
+new file mode 100644
+index 0000000000..5a74181361
+--- /dev/null
++++ b/package/rauc-hawkbit-updater/rauc-hawkbit-updater.mk
+@@ -0,0 +1,15 @@
++###############################################################################
++#
++# rauc-hawkbit-updater
++#
++###############################################################################
++
++RAUC_HAWKBIT_UPDATER_VERSION = 1.3
++RAUC_HAWKBIT_UPDATER_SITE = https://github.com/rauc/rauc-hawkbit-updater/releases/download/v$(RAUC_HAWKBIT_UPDATER_VERSION)
++RAUC_HAWKBIT_UPDATER_SOURCE = rauc-hawkbit-updater-$(RAUC_HAWKBIT_UPDATER_VERSION).tar.xz
++RAUC_HAWKBIT_UPDATER_LICENSE = LGPL-2.1
++RAUC_HAWKBIT_UPDATER_LICENSE_FILES = LICENSE
++RAUC_HAWKBIT_UPDATER_CPE_ID_VENDOR = pengutronix
++RAUC_HAWKBIT_UPDATER_DEPENDENCIES = json-glib
++
++$(eval $(meson-package))

@@ -1,0 +1,129 @@
+diff --git a/DEVELOPERS b/DEVELOPERS
+index b6d288c54f..8ec32087a1 100644
+--- a/DEVELOPERS
++++ b/DEVELOPERS
+@@ -2685,6 +2685,9 @@ F:	package/libvpx/
+ F:	package/mesa3d-demos/
+ F:	package/ti-gfx/
+ 
++N:	Stefan Hager <stefan.hager@ginzinger.com>
++F:	package/cpuinfo/
++
+ N:	Stefan Ott <stefan@ott.net>
+ F:	package/unbound/
+ 
+diff --git a/package/Config.in b/package/Config.in
+index 0f8dab3e71..60d6a115e0 100644
+--- a/package/Config.in
++++ b/package/Config.in
+@@ -1664,6 +1664,7 @@ menu "Hardware handling"
+ 	source "package/bcm2835/Config.in"
+ 	source "package/c-periphery/Config.in"
+ 	source "package/ccid/Config.in"
++	source "package/cpuinfo/Config.in"
+ 	source "package/dtc/Config.in"
+ 	source "package/gnu-efi/Config.in"
+ 	source "package/hackrf/Config.in"
+diff --git a/package/cpuinfo/0001-Enable-CXX-only-when-needed-for-tests-benchmarks.patch b/package/cpuinfo/0001-Enable-CXX-only-when-needed-for-tests-benchmarks.patch
+new file mode 100644
+index 0000000000..7aeef0edc0
+--- /dev/null
++++ b/package/cpuinfo/0001-Enable-CXX-only-when-needed-for-tests-benchmarks.patch
+@@ -0,0 +1,41 @@
++From 66dbf4fbe202318860caeab3b1ef9c2fe70e2c4c Mon Sep 17 00:00:00 2001
++From: James Hilliard <james.hilliard1@gmail.com>
++Date: Sun, 29 Jan 2023 16:55:08 -0700
++Subject: [PATCH] Enable CXX only when needed for tests/benchmarks
++
++Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
++[Upstream status:
++https://github.com/pytorch/cpuinfo/pull/133]
++---
++ CMakeLists.txt | 8 +++++++-
++ 1 file changed, 7 insertions(+), 1 deletion(-)
++
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 9f4d1d1..9e1c153 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
++ # ---[ Setup project
++ PROJECT(
++     cpuinfo
++-    LANGUAGES C CXX
+++    LANGUAGES C
++     )
++ 
++ # ---[ Options.
++@@ -103,6 +103,12 @@ ELSEIF(NOT CMAKE_SYSTEM_NAME MATCHES "^(Windows|WindowsStore|CYGWIN|MSYS|Darwin|
++   ENDIF()
++ ENDIF()
++ 
+++IF(CPUINFO_SUPPORTED_PLATFORM)
+++  IF(CPUINFO_BUILD_MOCK_TESTS OR CPUINFO_BUILD_UNIT_TESTS OR CPUINFO_BUILD_BENCHMARKS)
+++    ENABLE_LANGUAGE(CXX)
+++  ENDIF()
+++ENDIF()
+++
++ # ---[ Download deps
++ SET(CONFU_DEPENDENCIES_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps
++   CACHE PATH "Confu-style dependencies source directory")
++-- 
++2.34.1
++
+diff --git a/package/cpuinfo/Config.in b/package/cpuinfo/Config.in
+new file mode 100644
+index 0000000000..257480f068
+--- /dev/null
++++ b/package/cpuinfo/Config.in
+@@ -0,0 +1,17 @@
++config BR2_PACKAGE_CPUINFO_ARCH_SUPPORTS
++	bool
++	default y if BR2_aarch64
++	default y if BR2_arm
++	default y if BR2_i386
++	default y if BR2_x86_64
++
++config BR2_PACKAGE_CPUINFO
++	bool "cpuinfo"
++	depends on BR2_PACKAGE_CPUINFO_ARCH_SUPPORTS
++	depends on BR2_TOOLCHAIN_HAS_THREADS
++	help
++	  CPU INFOrmation library, cpuinfo is a library to detect
++	  essential for performance optimization information about
++	  host CPU.
++
++	  https://github.com/pytorch/cpuinfo
+diff --git a/package/cpuinfo/cpuinfo.hash b/package/cpuinfo/cpuinfo.hash
+new file mode 100644
+index 0000000000..7dd0d57172
+--- /dev/null
++++ b/package/cpuinfo/cpuinfo.hash
+@@ -0,0 +1,4 @@
++# Locally calculated
++sha256  cf243e7ac07cd5e2ac58dcb29f8a9047b7887452212aead2ddf1ceda45cc66dd  cpuinfo-eb4a6674bfe9cf91b63b9817412ae5f6862c8432.tar.gz
++# License files, locally calculated
++sha256  8e7e60636c3aa0cb03571a1a841ce5697f9551ff92b3c426c2561613d15ade70  LICENSE
+diff --git a/package/cpuinfo/cpuinfo.mk b/package/cpuinfo/cpuinfo.mk
+new file mode 100644
+index 0000000000..d59513eea3
+--- /dev/null
++++ b/package/cpuinfo/cpuinfo.mk
+@@ -0,0 +1,17 @@
++################################################################################
++#
++# cpuinfo
++#
++################################################################################
++
++CPUINFO_VERSION = eb4a6674bfe9cf91b63b9817412ae5f6862c8432
++CPUINFO_SITE = $(call github,pytorch,cpuinfo,$(CPUINFO_VERSION))
++CPUINFO_LICENSE = BSD-2-Clause
++CPUINFO_LICENSE_FILES = LICENSE
++CPUINFO_INSTALL_STAGING = YES
++CPUINFO_CONF_OPTS = \
++	-DCPUINFO_BUILD_UNIT_TESTS=OFF \
++	-DCPUINFO_BUILD_MOCK_TESTS=OFF \
++	-DCPUINFO_BUILD_BENCHMARKS=OFF
++
++$(eval $(cmake-package))

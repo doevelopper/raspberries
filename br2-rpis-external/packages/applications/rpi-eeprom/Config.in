@@ -1,0 +1,14 @@
+config BR2_PACKAGE_RPI_EEPROM
+	bool "rpi-eeprom tools"
+	depends on BR2_arm || BR2_aarch64
+	depends on BR2_INSTALL_LIBSTDCPP
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	depends on !BR2_STATIC_LIBS
+	help
+	  Raspberry Pi eeprom binaires and flash utils
+	  https://github.com/raspberrypi/rpi-eeprom
+
+comment "rpi-eeprom needs a toolchain w/ C++, threads, dynamic library"
+	depends on BR2_arm
+	depends on !BR2_INSTALL_LIBSTDCPP || !BR2_TOOLCHAIN_HAS_THREADS || \
+		BR2_STATIC_LIBS

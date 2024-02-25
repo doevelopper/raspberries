@@ -1,0 +1,62 @@
+#!/bin/sh
+# shellcheck shell=dash disable=SC2169,SC3010 source=/dev/null
+#
+# Start RaspberryMatic in LAN Gateway Mode
+#
+
+DAEMON="hmlangw"
+PIDFILE="/var/run/${DAEMON}.pid"
+HM_HMRF_MMDNODE=/dev/mmd_bidcos
+
+[[ -r /var/hm_mode ]] && . /var/hm_mode
+
+# skip this startup if NOT in LAN Gateway mode
+[[ "${HM_MODE}" != "HM-LGW" ]] && exit 0
+
+start() {
+	echo -n "Starting LAN Gateway Daemon: "
+	if [[ -c ${HM_HMRF_DEVNODE} ]]; then
+		if start-stop-daemon -S -b -m -p ${PIDFILE} --startas /bin/sh -- -c "exec /bin/${DAEMON} -b -n ${HM_HMRF_SERIAL} -s ${HM_HMRF_MMDNODE} -r -1 >/var/log/${DAEMON}.log 2>&1"; then
+			echo "OK"
+		else
+			echo "FAIL"
+		fi
+	else
+		echo "ERROR: no BidCos-RF hardware found"
+	fi
+}
+
+stop() {
+	echo -n "Stopping LAN Gateway Daemon: "
+	if start-stop-daemon -K -q -o -p ${PIDFILE}; then
+		echo "OK"
+	else
+		echo "FAIL"
+	fi
+	rm -f ${PIDFILE}
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+	start)
+		start
+	;;
+
+	stop)
+		stop
+	;;
+
+	restart|reload)
+		restart
+	;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart|reload}"
+		exit 1
+esac
+
+exit 0

@@ -1,0 +1,115 @@
+# # menu "Interpreter languages and scripting"
+# # 	source "$BR2_EXTERNAL_RPIS_PATH/packages/chibi-scheme/Config.in"
+# # 	source "$BR2_EXTERNAL_RPIS_PATH/packages/chicken/Config.in"
+# # endmenu
+
+# menu "Libraries"
+
+# # menu "Crypto"
+# # 	source "$BR2_EXTERNAL_RPIS_PATH/packages/bearssl/Config.in"
+# # endmenu
+
+
+# menu "Hello Packages"
+# 	source "$BR2_EXTERNAL_RPIS_PATH/packages/hello-i2c/Config.in"
+# endmenu
+
+# endmenu
+
+# # if BR2_PACKAGE_PYTHON || BR2_PACKAGE_PYTHON3
+# # menu "External python modules"
+# # 	source "$BR2_EXTERNAL_RPIS_PATH/packages/python-scapy/Config.in"
+# # endmenu
+# # endif
+
+
+# config BR2_CFSOS_DEVEL_BUILD
+# 	bool
+# 	option env="BR2_CFSOS_DEVEL_BUILD"
+# 	help
+# 		Developers at Laird can access the closed source repositories,
+# 		so they should set this flag to directly build from the closed
+# 		source repositories under $BR2_EXTERNAL_CFSOS_CLOSED_SOURCE_PATH/package.
+
+# config BR2_SUMMIT_SECURE_BOOT
+# 	bool "Summit Secure Boot"
+# 	select BR2_TARGET_UBOOT_NEEDS_OPENSSL
+# 	help
+# 		This enables "traditional" (down to kernel) secure boot
+# 		rootfs security provided by BR2_PACKAGE_CFSOS_ENCRYPTED_STORAGE_TOOLKIT
+
+
+menu "RPIS packages playground: BSP, Drivers applications."
+
+    menu "Packages (Upstream)"
+        # source "$BR2_EXTERNAL_RPIS_PATH/package/cfsos-br/Config.in"
+        # source "$BR2_EXTERNAL_RPIS_PATH/package/cfsos-br/Config.in.host"
+    endmenu
+
+    menu "3rd Party"
+
+        menu "Monitoring tools"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/utils/atop2/Config.in"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/utils/btop/Config.in"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/utils/netatop/Config.in"
+        endmenu
+
+        menu "Network"
+
+        endmenu
+
+        menu "Benchmarking"
+
+        endmenu
+
+    endmenu
+
+    menu "Linux drivers"
+        if BR2_LINUX_KERNEL
+
+            menu "Kernel Space Linux Drivers"
+                # source "$BR2_EXTERNAL_RPIS_PATH/package/drivers/kernel-space/foobar_module/Config.in"
+                # source "$BR2_EXTERNAL_RPIS_PATH/package/drivers/kernel-space/foobar_chrdev/Config.in"
+            endmenu
+
+            menu "Users Space Linux Drivers"
+            endmenu
+        endif
+    endmenu
+
+    menu "Peripheral driver"
+        menu "Small TFT Screen"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/rpi-fbcp/Config.in"
+        endmenu
+        menu "Pi Hats"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/recalbox-wpaf/Config.in"
+        endmenu
+    endmenu
+
+    menu "Applications"
+
+        menu "Applications"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/applications/lan-gateway/Config.in"
+            # source "$BR2_EXTERNAL_RPIS_PATH/package/applications/rpi-eeprom/Config.in"
+        endmenu
+
+        menu "Applications Tests "
+
+            menu "Unit Testing"
+
+            endmenu
+
+            menu "Regression Unit Testing"
+
+            endmenu
+
+            menu "ATP"
+                menu "Ruby Runtime Environment"
+
+                endmenu
+            endmenu
+        endmenu
+
+    endmenu
+
+endmenu

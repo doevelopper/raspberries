@@ -1,0 +1,23 @@
+config BR2_PACKAGE_TLSDATE
+	bool "tlsdate"
+	depends on BR2_USE_MMU # fork()
+	depends on BR2_USE_WCHAR # ncurses wchar
+	depends on BR2_TOOLCHAIN_HEADERS_AT_LEAST_3_14 # PERF_FLAG_FD_CLOEXEC
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_NCURSES_WCHAR
+	select BR2_PACKAGE_ZLIB
+	help
+		tlsdate: secure parasitic rdate replacement
+
+		tlsdate sets the local clock by securely connecting with TLS to remote
+		servers and extracting the remote time out of the secure handshake. Unlike
+		ntpdate, tlsdate uses TCP, for instance connecting to a remote HTTPS or TLS
+		enabled service, and provides some protection against adversaries that try to
+		feed you malicious time information.
+
+	  	https://github.com/ioerror/tlsdate.git
+
+comment "atop2 needs a toolchain w/ wchar, headers >= 3.14"
+	depends on BR2_USE_MMU
+	depends on !BR2_USE_WCHAR || \
+		!BR2_TOOLCHAIN_HEADERS_AT_LEAST_3_14

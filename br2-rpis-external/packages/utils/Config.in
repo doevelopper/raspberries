@@ -1,0 +1,4 @@
+# menu "Monitoring tools"
+# 	source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/atop2/Config.in"
+# 	source "$BR2_EXTERNAL_SCRATCHOS_PATH/package/utils/btop/Config.in"
+# endmenu

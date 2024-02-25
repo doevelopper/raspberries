@@ -1,0 +1,21 @@
+# Uncomment this when you add your own packages, replacing PACKAGENAME with the name of the package folder.
+
+#source "$BR2_EXTERNAL_RPIS_PATH/package/python_pypi/Config.in"
+#source "$BR2_EXTERNAL_RPIS_PATH/package/python_local/Config.in"
+
+menu "RPIS packages"
+    menu "Template packages"
+        comment "Template Cmake,Makefile and autotools packages"
+        source "$BR2_EXTERNAL_RPIS_PATH/packages/applications/hellos/hello-autotools/Config.in"
+        source "$BR2_EXTERNAL_RPIS_PATH/packages/applications/hellos/hello-cmake/Config.in"
+        source "$BR2_EXTERNAL_RPIS_PATH/packages/applications/hellos/hello-makefile/Config.in"
+        source "$BR2_EXTERNAL_RPIS_PATH/packages/applications/hellos/hello-i2c/Config.in"
+        source "$BR2_EXTERNAL_RPIS_PATH/packages/applications/hellos/hello-gps/Config.in"
+        source "$BR2_EXTERNAL_RPIS_PATH/packages/applications/hellos/hello-raylib/Config.in"
+    endmenu
+
+    source "$BR2_EXTERNAL_RPIS_PATH/packages/Config.in"
+endmenu
+
+
+source "$BR2_EXTERNAL_RPIS_PATH/packages/Config.in.host"
